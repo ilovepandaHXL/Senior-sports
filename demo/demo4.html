@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<style>
+			body{
+				margin: 0;
+			}
+			#box{
+				height: 100px;
+				width: 100px;
+				background-color: pink;
+				position: absolute;
+				top: 0;
+				left: 0;
+			}
+			
+		</style>
+	</head>
+	<body>
+		<div id="box"></div>
+		<script>
+			
+			var timer = null;
+			var speed = 0;
+			
+			box.onmouseover = function(){
+				doMove( 300 );
+			}
+			box.onmouseout = function(){
+				doMove( 30 );
+			}
+			
+			function doMove(iTarget){
+				clearInterval(timer);
+				timer = setInterval(function(){
+					speed += (iTarget - box.offsetHeight)/6;
+					speed *= 0.75;
+					if( Math.abs(iTarget-box.offsetHeight)<=1&&Math.abs(speed)<=1 ){
+						clearInterval(timer);
+						speed = 0;
+						box.style.height = iTarget + "px";
+					}else{
+						var H = box.offsetHeight + speed;
+						if( H<0 ){//弹性过界问题解决
+							H = 0;
+						}
+						box.style.height = H + "px";
+					}
+				},30)
+			}
+		</script>
+	</body>
+</html>

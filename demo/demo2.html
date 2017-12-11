@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>弹性运动</title>
+		<style>
+			body{
+				margin: 0;
+			}
+			#box{
+				height: 100px;
+				width: 100px;
+				background-color: pink;
+				position: absolute;
+				top: 200px;
+				left: 0;
+			}
+			#bang{
+				height: 500px;
+				width: 2px;
+				background-color: black;
+				position: absolute;
+				top: 0;
+				left: 500px;
+			}
+		</style>
+	</head>
+	<body>
+		<div id="box"></div>
+		<div id="bang"></div>
+		<script>
+			var box = document.getElementById("box");
+			var bang = document.getElementById("bang");
+			var timer = null;
+			var speed = 0;
+			function toMove(){
+				clearInterval(timer);
+				timer = setInterval(function(){
+					speed += (500-box.offsetLeft)/7;
+					speed *= 0.75;//摩擦系数
+					if( Math.abs(speed)<=1&&Math.abs(500-box.offsetLeft)<=1 ){
+						clearInterval( timer );
+						box.style.left = "500px";
+						speed = 0;
+					}else{
+						box.style.left = box.offsetLeft + speed + "px";
+					}
+				},50)
+			}
+			document.onclick = toMove;
+			//摩擦力 F = fM；
+			
+		</script>
+	</body>
+</html>

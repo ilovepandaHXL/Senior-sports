@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>弹性运动应用</title>
+		<style>
+			body{
+				margin: 0;
+			}
+			ul{
+				margin: 0;
+				padding: 0;
+				list-style: none;
+			}
+			#list{
+				position: relative;
+				margin: 20px auto;
+				height: 30px;
+				width: 330px;
+			}
+			#list li{
+				float: left;
+				height: 30px;
+				margin-right: 5px;
+				line-height: 30px;
+				text-align: center;
+				width: 50px;
+				background-color: cornflowerblue;
+				color: brown;
+			}
+			#list #mask{
+				position: absolute;
+				left: 0;
+				top: 0;
+				background-color: pink;
+				
+			}
+		</style>
+	</head>
+	<body>
+		<ul id="list">
+			<li id="mask"></li>
+			<li class="nav1">首页</li>
+			<li class="nav1">视频</li>
+			<li class="nav1">音乐</li>
+			<li class="nav1">贴吧</li>
+			<li class="nav1">留言</li>
+		</ul>
+		<script>
+			var mask = document.getElementById("mask");
+			var navs = document.getElementsByClassName("nav1");
+			var speed = 0;
+			var timer = null;
+			var timer2 = null;
+			function doMove(iTarget,obj){
+				clearInterval( timer );
+				timer = setInterval(function(){
+					speed += (iTarget - obj.offsetLeft)/6;
+					speed *= 0.75;
+					if(Math.abs(speed)<=1&&Math.abs(iTarget-obj.offsetLeft)<=1){
+						clearInterval(timer);
+						obj.style.left = iTarget + "px";
+						speed = 0;
+					}else{
+						obj.style.left = obj.offsetLeft + speed + "px";
+					}
+				},30)
+			}
+			
+			for( var i = 0;i<navs.length;i++ ){
+				navs[i].onmouseover = function(){
+					clearTimeout( timer2 );
+					doMove(this.offsetLeft,mask);
+				}
+				navs[i].onmouseout = function(){
+					timer2 = setTimeout(function(){
+						doMove(navs[0].offsetLeft,mask);
+					},100)   
+				}
+			}
+//			如果直接nav.onmouseout时执行函数,那么当mask过来时就相当于触发out这时mask会反复
+//			移动,如果nav不添加out时的函数,而在nav上添加out,那么在极快速的移入移出某个nav时,
+//			会不触发nav的out,mask回不去.所以可以用延时定时器解决
+			mask.onmouseover = function(){
+				clearTimeout( timer2 );
+			}
+			mask.onmouseout = function(){
+				timer2 = setTimeout(function(){
+					doMove(navs[0].offsetLeft,mask);
+				},100)
+			}
+			
+		</script>
+	</body>
+</html>

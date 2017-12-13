@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>拖拽回弹</title>
+		<style>
+			body{
+				margin: 0;
+			}
+			ul{
+				margin: 0;
+				padding: 0;
+				list-style: none;
+			}
+			img{
+				vertical-align: top;
+				border: none;
+				height: 300px;
+				width: 400px;
+			}
+			#box{
+				height: 300px;
+				width: 400px;
+				margin: 200px auto;
+				border: 5px solid blue;
+				position: relative;
+				overflow: hidden;
+			}
+			li{
+				float: left;
+			}
+			ul{
+				height: 300px;
+				width: 2000px;
+				position: absolute;
+				left: 0;
+				top: 0
+			}
+		</style>
+	</head>
+	<body>
+		<div id="box">
+			<ul id="list">
+				<li><img src="img/0.jpg"></li>
+				<li><img src="img/1.jpg"></li>
+				<li><img src="img/2.jpg"></li>
+				<li><img src="img/3.jpg"></li>
+				<li><img src="img/4.jpg"></li>
+			</ul>
+		</div>	
+		<script>
+			var list = document.getElementById("list");
+			var lis = list.getElementsByTagName("li");
+			var liL = lis[0].offsetWidth;
+			var startX = 0;
+			var endX = 0;
+			var iNow = 0;
+			var timer = null;
+			var speed = 0;
+			list.onmousedown = function(ev){
+				clearInterval( timer );
+				startX = ev.clientX;
+				var disX = ev.clientX - list.offsetLeft;
+				document.onmousemove = function(ev){
+					list.style.left = ev.clientX - disX + "px";
+				}
+				document.onmouseup = function(ev){
+					endX = ev.clientX;
+					document.onmousemove = document.onmouseup = null;
+					if(endX-startX>0){
+//						alert("向右");
+						iNow--;
+						if( iNow < 0 ){
+							iNow = 0;
+						}
+						doMove(-iNow*liL);
+						console.log(iNow);
+					}else{
+//						alert("向左");
+						iNow++;
+//						console.log( lis.length - 1 );
+						if( iNow>lis.length - 1 ){
+							iNow = lis.length - 1;
+						}
+						doMove(-iNow*liL);
+						console.log( iNow );
+					}
+				}
+				return false;
+			}
+			function doMove(iTarget){
+				clearInterval(timer);
+				timer = setInterval(function(){
+					speed += (iTarget - list.offsetLeft)/6;
+					speed *= 0.75;
+					if( Math.abs(speed)<=1&&Math.abs(iTarget-list.offsetLeft<=1) ){
+						clearInterval(timer);
+						speed = 0;
+						list.style.left = iTarget + "px";
+					}else{
+						list.style.left = list.offsetLeft + speed + "px";
+					}
+				},30)
+			}
+			
+		</script>
+	</body>
+</html>

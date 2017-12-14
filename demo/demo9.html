@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>碰撞弹窗</title>
+		<style>
+			body{
+				margin: 0;
+			}
+			#box{
+				height: 200px;
+				width: 300px;
+				background-color: pink;
+				position: absolute;
+				top: 0;
+				left: 0
+			}
+		</style>
+	</head>
+	<body>
+		<div id="box"></div>
+		<script>
+			var box =document.getElementById("box");
+			
+			var prevX = 0;
+			var prevY = 0;
+			var speedX = 0;
+			var speedY = 0;
+			
+			var timer = null;
+			box.onmousedown = function(ev){
+				var disX = ev.clientX - box.offsetLeft;
+				var disY = ev.clientY - box.offsetTop;
+				
+				prevX = ev.clientX;
+				prevY = ev.clientY;
+				
+				clearInterval( timer );
+				document.onmousemove = function(ev){
+					box.style.left = ev.clientX - disX + "px";
+					box.style.top = ev.clientY - disY + "px";
+					
+					speedX = ev.clientX - prevX;
+					speedY = ev.clientY - prevY;
+					
+					prevX = ev.clientX;
+					prevY = ev.clientY;
+					
+				}
+				document.onmouseup = function(){
+					document.onmousemove = document.onmouseup = null;
+					doMove();
+				}
+				return false
+			}
+			
+			function doMove(){
+				clearInterval( timer );
+				timer = setInterval(function(){
+					speedY += 3;
+					var L = box.offsetLeft + speedX;
+					var T = box.offsetTop + speedY;
+					
+					if( L>document.documentElement.clientWidth - box.offsetWidth ){
+						L = document.documentElement.clientWidth - box.offsetWidth;
+						speedX *= -1;
+						speedX *= 0.75;
+					}else if(L<0){
+						L = 0;
+						speedX *= -1;
+						speedX *= 0.75;
+					}
+					
+					if( T > document.documentElement.clientHeight - box.offsetHeight ){
+						T = document.documentElement.clientHeight - box.offsetHeight;
+						speedY *= -1;
+						speedY *= 0.75;
+						speedX *= 0.75;
+					}else if( T<0 ){
+						T = 0;
+						speedY *= -1;
+						speedY *= 0.75;
+					}
+					
+					box.style.left = L + "px";
+					box.style.top = T + "px";
+					
+				},30);
+			}
+			
+			console.log( window.location.href );
+		</script>
+	</body>
+</html>
